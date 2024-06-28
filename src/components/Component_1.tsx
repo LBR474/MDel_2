@@ -1,12 +1,9 @@
 import { useRef, useEffect } from "react";
 import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
-import { OrbitControls, Plane
- // ,  useHelper 
-} from "@react-three/drei";
+import { OrbitControls, Plane } from "@react-three/drei";
 import * as THREE from "three";
 import TWEEN from "@tweenjs/tween.js";
-//import { SpotLightHelper } from "three";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"; // Updated import path
 
 const Spotlight = ({
   color,
@@ -16,7 +13,7 @@ const Spotlight = ({
   position: [number, number, number];
 }) => {
   const light = useRef<THREE.SpotLight>(null!);
-  // useHelper(light, SpotLightHelper, "cyan");
+  
 
   useEffect(() => {
     const tween = (light: THREE.SpotLight) => {
@@ -71,27 +68,17 @@ const Spotlight = ({
 
 const Model = () => {
   const gltf = useLoader(GLTFLoader, "MDel_2.glb");
-  return (
-    <primitive
-      object={gltf.scene}
-      scale={0.2}
-      // rotation={[0, Math.PI / 2, 0]}
-      position={[0, 0.0, 0]}
-    />
-  );
+  return <primitive object={gltf.scene} scale={0.2} position={[0, 0.0, 0]} />;
 };
 
 const Sprite = ({ position }: { position: [number, number, number] }) => {
-  const texture = useLoader(
-    THREE.TextureLoader,
-    "MDEL_small_installation.png"
-  );
+  const texture = useLoader(THREE.TextureLoader, "MDEL_small_installation.png");
 
   // Calculate aspect ratio
   const aspect = texture.image.width / texture.image.height;
 
   return (
-    <sprite position={position} scale={[1 * aspect, 1, 1]}>
+    <sprite position={position} scale={[1 * aspect, 1 * aspect, 1]}>
       <spriteMaterial attach="material" map={texture} />
     </sprite>
   );
@@ -101,7 +88,7 @@ const Scene = () => {
   const { scene, camera } = useThree();
 
   useEffect(() => {
-    camera.position.set(0, 0.5, 3.1);
+    camera.position.set(0, 1.0, 3.1);
     camera.lookAt(0, 0.0, 0);
     scene.background = new THREE.Color(0x87ceeb);
   }, [camera, scene]);
@@ -136,11 +123,11 @@ const Scene = () => {
         position={[0, -0.15, 0]} // Lower position to avoid z-fighting
         receiveShadow
       >
-        <meshPhongMaterial attach="material" color="#404040" />{" "}
-        {/* Dark gray color */}
+        <meshPhongMaterial attach="material" color="#404040" />{""}
+        
       </Plane>
 
-      <Sprite position={[0, 0.5, -0.5]} />
+      <Sprite position={[0, 0.4, -1.5]} />
       <Model />
     </>
   );
